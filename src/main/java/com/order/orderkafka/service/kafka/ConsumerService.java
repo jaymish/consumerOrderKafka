@@ -20,10 +20,6 @@ public class ConsumerService {
         this.emailService=emailService;
         this.defaultOrderService=defaultOrderService;
     }
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory",
-    topics = "${kafka.topic.string-demo.name}",
-    groupId = "${kafka.topic.string-demo.groupId}")
-    public void consume(String message){ log.info(String.format("$$$$ => Consumed Message: %s", message));}
 
     @KafkaListener(containerFactory = "jsonKafkaListenerContainerFactory",
             topics = "${kafka.topic.json.name}",
