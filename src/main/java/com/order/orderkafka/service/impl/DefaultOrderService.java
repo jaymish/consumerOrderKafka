@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.order.orderkafka.model.Orders;
 import com.order.orderkafka.model.Updates;
 import com.order.orderkafka.repo.OrderRepo;
-import com.order.orderkafka.repo.OrderRepository;
 import com.order.orderkafka.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,16 +16,13 @@ import java.util.List;
 
 @Service
 public class DefaultOrderService implements OrderService {
-    //List<Weather> list=new LinkedList<>();
 
-    private OrderRepository orderRepository;
     private RestTemplate restTemplate;
     private ObjectMapper objectMapper;
     private OrderRepo orderRepo;
 
     @Autowired
-    public DefaultOrderService(OrderRepository orderRepository, RestTemplate restTemplate, ObjectMapper objectMapper, OrderRepo orderRepo){
-        this.orderRepository = orderRepository;
+    public DefaultOrderService( RestTemplate restTemplate, ObjectMapper objectMapper, OrderRepo orderRepo){
         this.restTemplate=restTemplate;
         this.objectMapper=objectMapper;
         this.orderRepo=orderRepo;
@@ -36,11 +32,6 @@ public class DefaultOrderService implements OrderService {
     public boolean addWeatherReadings(Orders orders) throws JsonProcessingException {
         orderRepo.saveOrder(orders);
         return true;
-    }
-
-    @Override
-    public Orders cancelOrder(String id) {
-        return orderRepo.orderCancel(id);
     }
 
     @Override

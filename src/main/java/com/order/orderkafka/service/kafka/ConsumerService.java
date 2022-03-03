@@ -32,16 +32,6 @@ public class ConsumerService {
         emailService.sendSimpleMessage(orders.getCustomer().getEmail_id(), "Weather", orders.toString());
     }
 
-    @KafkaListener(containerFactory = "kafkaListenerContainerFactory",
-            topics = "${kafka.topic.string.name}",
-            groupId = "${kafka.topic.string.groupId}")
-    public void consumeString(String id) throws JsonProcessingException {
-        log.info("Consumed Message: {}", id);
-        System.out.println("Email Notification:"+ id);
-        //defaultOrderService.addWeatherReadings(id);
-        //emailService.sendSimpleMessage("jaymish9558@gmail.com", "Order Cancel", id);
-    }
-
     @KafkaListener(containerFactory = "updateKafkaListenerContainerFactory",
             topics = "${kafka.topic.update.name}",
             groupId = "${kafka.topic.update.groupId}")
