@@ -32,7 +32,7 @@ public class Orders {
     private DeliveryMethod deliveryMethod;
 
 
-    public Orders(){
+    /*public Orders(){
         this.id= UUID.randomUUID().toString();
-    }
+    }*/
 }

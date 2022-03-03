@@ -17,7 +17,7 @@ public class PaymentSplit {
     @OneToOne(cascade = CascadeType.ALL)
     private Payment payment;
 
-    public PaymentSplit(){
+    /*public PaymentSplit(){
         this.id= UUID.randomUUID().toString();
-    }
+    }*/
 }

@@ -5,6 +5,7 @@ package com.order.orderkafka.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.order.orderkafka.model.Orders;
+import com.order.orderkafka.model.Updates;
 import com.order.orderkafka.repo.OrderRepo;
 import com.order.orderkafka.repo.OrderRepository;
 import com.order.orderkafka.service.OrderService;
@@ -38,8 +39,12 @@ public class DefaultOrderService implements OrderService {
     }
 
     @Override
-    public List<Orders> getWeatherReadingsSorted() {
-        List<Orders> weatherList= (List<Orders>) orderRepository.findAll();
-        return weatherList;
+    public Orders cancelOrder(String id) {
+        return orderRepo.orderCancel(id);
+    }
+
+    @Override
+    public Orders updateOrder(Updates updates) {
+        return orderRepo.updateOrderStatus(updates);
     }
 }

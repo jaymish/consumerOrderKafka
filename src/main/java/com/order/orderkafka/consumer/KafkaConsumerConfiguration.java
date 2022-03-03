@@ -1,6 +1,7 @@
 package com.order.orderkafka.consumer;
 
 import com.order.orderkafka.model.Orders;
+import com.order.orderkafka.model.Updates;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -105,5 +106,38 @@ public class KafkaConsumerConfiguration {
         return new DefaultKafkaConsumerFactory(props,
                 new StringDeserializer(),
                 new JsonDeserializer<>(Orders.class));
+    }
+
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory <String, Updates> updateKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Updates> factory =new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerUpdateFactoryJson());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
+        factory.getContainerProperties().setSyncCommits(true);
+        factory.setErrorHandler(new SeekToCurrentErrorHandler());
+        return factory;
+    }
+
+
+    @Bean
+    public DefaultKafkaConsumerFactory consumerUpdateFactoryJson() {
+        Map<String , Object> props = new HashMap<>();
+
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,bootstrapServers);
+
+        //props.put(ConsumerConfig.CLIENT_ID_CONFIG,clientId+"_"+ InetAddress.getLocalHost().getHostName()+"string");
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,false);
+        props.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, heartbeatInterval);
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, maxPollRecords);
+        props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, isolationLevel);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class.getName());
+
+
+        return new DefaultKafkaConsumerFactory(props,
+                new StringDeserializer(),
+                new JsonDeserializer<>(Updates.class));
     }
 }

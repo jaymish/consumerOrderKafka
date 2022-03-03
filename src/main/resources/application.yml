@@ -49,6 +49,12 @@ spring:
 
 kafka:
   topic:
+    update:
+      name: ${KAFKA_UPDATE_NAME}
+      groupId: ${KAFKA_UPDATE_GROUPID}
+    string:
+      name: ${KAFKA_STRING_NAME}
+      groupId: ${KAFKA_STRING_GROUPID}
     json:
       name: ${KAFKA_JSON_NAME}
       groupId: ${KAFKA_JSON_GROUPID}

@@ -1,7 +1,9 @@
 package com.order.orderkafka.repo.impl;
 
 import com.order.orderkafka.model.Orders;
+import com.order.orderkafka.model.Updates;
 import com.order.orderkafka.repo.OrderRepo;
+import com.order.orderkafka.service.impl.EmailServiceImpl;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,6 +18,11 @@ public class OrderRepoImpl implements OrderRepo {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    EmailServiceImpl emailService;
+    public OrderRepoImpl(EmailServiceImpl emailService){
+        this.emailService=emailService;
+    }
 
     @Override
     public List<Orders> getAllOrders() {
@@ -55,6 +62,16 @@ public class OrderRepoImpl implements OrderRepo {
         Orders orders = getOrderById(id);
         orders.setStatus("Cancel");
         entityManager.merge(orders);
+        emailService.sendSimpleMessage(orders.getCustomer().getEmail_id(), "Order Cancel", id);
+        return orders;
+    }
+
+    @Override
+    public Orders updateOrderStatus(Updates updates) {
+        Orders orders = getOrderById(updates.getId());
+        orders.setStatus(updates.getStatus());
+        entityManager.merge(orders);
+        emailService.sendSimpleMessage(orders.getCustomer().getEmail_id(), "Order "+updates.getStatus(), updates.getId());
         return orders;
     }
 

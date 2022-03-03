@@ -21,7 +21,7 @@ public class Payment {
     @OneToOne(cascade = CascadeType.ALL)
     private Address billing;
 
-    public Payment(){
+    /*public Payment(){
         this.id= UUID.randomUUID().toString();
-    }
+    }*/
 }

@@ -4,6 +4,7 @@ package com.order.orderkafka.service.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.order.orderkafka.model.Orders;
+import com.order.orderkafka.model.Updates;
 import com.order.orderkafka.service.impl.DefaultOrderService;
 import com.order.orderkafka.service.impl.EmailServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,26 @@ public class ConsumerService {
         log.info("Consumed Message: {}, {}", orders.getId(), orders);
         System.out.println("Email Notification:"+ orders.getId() +orders+orders);
         defaultOrderService.addWeatherReadings(orders);
-        emailService.sendSimpleMessage("jaymish9558@gmail.com", "Weather", orders.toString());
+        emailService.sendSimpleMessage(orders.getCustomer().getEmail_id(), "Weather", orders.toString());
+    }
+
+    @KafkaListener(containerFactory = "kafkaListenerContainerFactory",
+            topics = "${kafka.topic.string.name}",
+            groupId = "${kafka.topic.string.groupId}")
+    public void consumeString(String id) throws JsonProcessingException {
+        log.info("Consumed Message: {}", id);
+        System.out.println("Email Notification:"+ id);
+        //defaultOrderService.addWeatherReadings(id);
+        //emailService.sendSimpleMessage("jaymish9558@gmail.com", "Order Cancel", id);
+    }
+
+    @KafkaListener(containerFactory = "updateKafkaListenerContainerFactory",
+            topics = "${kafka.topic.update.name}",
+            groupId = "${kafka.topic.update.groupId}")
+    public void consumeString(Updates updates) throws JsonProcessingException {
+        log.info("Consumed Message: {}", updates);
+        System.out.println("Email Notification:"+ updates);
+        defaultOrderService.updateOrder(updates);
+        //emailService.sendSimpleMessage("jaymish9558@gmail.com", "Order Cancel", id);
     }
 }
